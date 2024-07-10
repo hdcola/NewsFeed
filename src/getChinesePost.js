@@ -1,15 +1,15 @@
 const ollama = require("ollama").default;
 
-module.exports = async ({ model, title, description, content }) => {
+module.exports = async ({ model, title, summary, content }) => {
   try {
     const promptLines = [
-      "Please provide the Chinese translation for the following text:",
-      `${title}`,
-      `${description}`,
+      "请使用以下新闻帮我生成一篇中文的新闻:",
+      `Title: ${title}`,
+      `Summary: ${summary}`,
     ];
 
     if (content) {
-      promptLines.push("", `${content}`);
+      promptLines.push("", `Content: ${content}`);
     }
 
     const prompt = promptLines.join("\n");
