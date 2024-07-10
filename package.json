@@ -7,6 +7,8 @@
     "newsfeed": "./src/index.js"
   },
   "dependencies": {
+    "axios": "^1.7.2",
+    "cheerio": "1.0.0-rc.12",
     "node-telegram-bot-api": "^0.66.0",
     "ollama": "^0.5.2",
     "rss-parser": "^3.13.0"

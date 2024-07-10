@@ -10,6 +10,8 @@ module.exports = async (url) => {
       link: item.link,
       description: item.contentSnippet,
       enclosure: item.enclosure,
+      pubDate: item.pubDate,
+      guid: item.guid,
     };
   });
 };

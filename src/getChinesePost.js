@@ -9,7 +9,7 @@ module.exports = async ({ model, title, description, content }) => {
     ];
 
     if (content) {
-      promptLines.push("", `Content: ${content}`);
+      promptLines.push("", `${content}`);
     }
 
     const prompt = promptLines.join("\n");
