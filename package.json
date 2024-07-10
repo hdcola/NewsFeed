@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "license": "GPL-3.0",
+  "name": "newsfeed",
+  "main": "./src/index.js",
+  "bin": {
+    "newsfeed": "./src/index.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0",
+    "ollama": "^0.5.2",
+    "rss-parser": "^3.13.0"
+  }
+}
