@@ -12,6 +12,7 @@
     "dotenv": "^16.4.5",
     "node-telegram-bot-api": "^0.66.0",
     "ollama": "^0.5.2",
-    "rss-parser": "^3.13.0"
+    "rss-parser": "^3.13.0",
+    "telegraph-node": "^1.0.4"
   }
 }

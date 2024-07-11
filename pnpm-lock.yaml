@@ -26,6 +26,9 @@ importers:
       rss-parser:
         specifier: ^3.13.0
         version: 3.13.0
+      telegraph-node:
+        specifier: ^1.0.4
+        version: 1.0.4
 
 packages:
 
@@ -583,6 +586,12 @@ packages:
 
   string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
+
+  telegraph-node@1.0.4:
+    resolution: {integrity: sha512-Lh8rFhgqm/hcj4KQvVTuHFM2w/LxojD7xmn4VtzeXWUB5g6w9SnMA27PjK1VWFbCqyU1Q5aJIECCa4DUjP820Q==}
+
+  tiny_request@1.0.13:
+    resolution: {integrity: sha512-syjOpxd/vgHVTJE1MBDrB5MUaCtyAIzJZH8aei2aCmc+7GVkXuZT/z1Yvlzz2vkC2hQ8PEEUiww3xZ6Fkm2HKA==}
 
   tough-cookie@2.5.0:
     resolution: {integrity: sha512-nlLsUzgm1kfLXSXfRZMc1KLAugd4hqJHDTvc2hDIwS3mZAfMEuMbc03SujMF+GEcpaX/qboeycw6iO8JwVv2+g==}
@@ -1385,6 +1394,12 @@ snapshots:
   string_decoder@1.1.1:
     dependencies:
       safe-buffer: 5.1.2
+
+  telegraph-node@1.0.4:
+    dependencies:
+      tiny_request: 1.0.13
+
+  tiny_request@1.0.13: {}
 
   tough-cookie@2.5.0:
     dependencies:
