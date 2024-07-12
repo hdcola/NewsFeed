@@ -8,19 +8,26 @@ const saveFeed = async (feed) => {
 
 const loadFeed = async (url) => {
   const currentFeed = await readRSSFeed(url);
+
   if (!fs.existsSync("feed.json")) {
+    await saveFeed(currentFeed);
     return currentFeed;
   }
+
   const savedFeed = JSON.parse(fs.readFileSync("feed.json", "utf-8"));
 
   const newFeed = currentFeed.filter(
     (currentItem) =>
-      // currentItem.pubDate should > any saved item pubDate
       !savedFeed.some(
         (savedItem) =>
           new Date(currentItem.pubDate) <= new Date(savedItem.pubDate)
       )
   );
+
+  // sort bye date asc
+  newFeed.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
+
+  await saveFeed(currentFeed);
 
   return newFeed;
 };

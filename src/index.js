@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { loadFeed, saveFeed } = require("./feedLoader.js");
+const { loadFeed } = require("./feedLoader.js");
 const { getPost } = require("./getChinesePost.js");
 const fetchContent = require("./fetchContent.js");
 const config = require("./config.js");
@@ -11,7 +11,6 @@ const { createPage } = require("./telegraph.js");
 const replyMsg = async (bot, chatId) => {
   const url = config.rssFeedUrl;
   const feed = await loadFeed(url);
-  await saveFeed(feed);
 
   for (const item of feed) {
     const { title, summary, content } = await fetchContent(item.link);
@@ -47,7 +46,6 @@ const replyMsg = async (bot, chatId) => {
 const feedToTelegram = async () => {
   const url = config.rssFeedUrl;
   const feed = await loadFeed(url);
-  await saveFeed(feed);
 
   for (const item of feed) {
     const { title, summary, content } = await fetchContent(item.link);
@@ -72,7 +70,7 @@ const feedToTelegram = async () => {
 
     for (const chatId of config.send_chatids) {
       await sendPhoto(chatId, item.enclosure.url, {
-        caption: `<a href="${telegraphUrl}">${postTitle}</a>${pubDate}\n\n${postSummary}`,
+        caption: `<a href="${telegraphUrl}">${postTitle}</a>\n${pubDate}\n\n${postSummary}`,
       });
     }
   }
