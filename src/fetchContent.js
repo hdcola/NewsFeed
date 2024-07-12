@@ -8,7 +8,9 @@ module.exports = async function fetchContent(url) {
 
     const $ = cheerio.load(content);
 
-    const titleText = $("h1.headlines .title.titleModule__main").text().trim();
+    const titleText = $("h1.headlines.titleModule .title.titleModule__main")
+      .text()
+      .trim();
     const summaries = $(
       "div.articleBody .lead.textModule.textModule--type-lead"
     )
