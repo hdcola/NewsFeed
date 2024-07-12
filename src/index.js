@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 
-const readRSSFeed = require("./readRSSFeed.js");
+const { loadFeed, saveFeed } = require("./feedLoader.js");
 const { getPost } = require("./getChinesePost.js");
 const fetchContent = require("./fetchContent.js");
 const config = require("./config.js");
-const { startBot, sendPhoto } = require("./telegram.js");
+const { sendPhoto } = require("./telegram.js");
+const { format } = require("date-fns");
 const { createPage } = require("./telegraph.js");
 
 const replyMsg = async (bot, chatId) => {
   const url = config.rssFeedUrl;
-  const feed = await readRSSFeed(url);
+  const feed = await loadFeed(url);
+  await saveFeed(feed);
 
   for (const item of feed) {
     const { title, summary, content } = await fetchContent(item.link);
@@ -44,7 +46,9 @@ const replyMsg = async (bot, chatId) => {
 
 const feedToTelegram = async () => {
   const url = config.rssFeedUrl;
-  const feed = await readRSSFeed(url);
+  const feed = await loadFeed(url);
+  await saveFeed(feed);
+
   for (const item of feed) {
     const { title, summary, content } = await fetchContent(item.link);
     console.log("Sending a post...");
@@ -63,9 +67,12 @@ const feedToTelegram = async () => {
     console.log("Summary:", postSummary);
     const telegraphUrl = await createPage(postTitle, postContent);
     console.log("url:", telegraphUrl);
+
+    const pubDate = format(new Date(item.pubDate), "yyyy-MM-dd HH:mm:ss");
+
     for (const chatId of config.send_chatids) {
       await sendPhoto(chatId, item.enclosure.url, {
-        caption: `<a href="${telegraphUrl}">${postTitle}</a>\n\n${postSummary}`,
+        caption: `<a href="${telegraphUrl}">${postTitle}</a>${pubDate}\n\n${postSummary}`,
       });
     }
   }
