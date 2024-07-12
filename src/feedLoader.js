@@ -8,6 +8,7 @@ const saveFeed = async (feed) => {
 
 const loadFeed = async (url) => {
   const currentFeed = await readRSSFeed(url);
+  console.log("currentFeed:", currentFeed.length);
 
   if (!fs.existsSync("feed.json")) {
     await saveFeed(currentFeed);

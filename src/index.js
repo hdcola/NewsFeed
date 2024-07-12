@@ -80,7 +80,10 @@ const main = async () => {
   if (config.telegramBotToken) {
     // startBot(replyMsg);
     while (true) {
-      console.log(Date.now(), "Checking for new posts...");
+      console.log(
+        format(Date.now(), "yyyy-MM-dd HH:mm:ss"),
+        "Checking for new posts..."
+      );
       await feedToTelegram();
       await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
     }
