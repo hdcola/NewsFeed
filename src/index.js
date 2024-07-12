@@ -79,7 +79,11 @@ const feedToTelegram = async () => {
 const main = async () => {
   if (config.telegramBotToken) {
     // startBot(replyMsg);
-    feedToTelegram();
+    while (true) {
+      console.log(Date.now(), "Checking for new posts...");
+      await feedToTelegram();
+      await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
+    }
   } else {
     console.log("Please provide a Telegram bot token.");
   }
