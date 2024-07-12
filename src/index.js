@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
 const readRSSFeed = require("./readRSSFeed.js");
-const { getContent, getTitle, getSummary } = require("./getChinesePost.js");
+const {
+  getContent,
+  getTitle,
+  getSummary,
+  getPost,
+} = require("./getChinesePost.js");
 const fetchContent = require("./fetchContent.js");
 const config = require("./config.js");
 const { startBot } = require("./telegram.js");
@@ -17,24 +22,14 @@ const replyMsg = async (bot, chatId) => {
   console.log("Sending a post...");
   console.log(item.link);
   console.log(item.enclosure.url);
-  console.log("Title:", title);
-  console.log("Summary:", summary);
 
-  const postTitle = await getTitle({
+  const {
+    title: postTitle,
+    summary: postSummary,
+    content: postContent,
+  } = await getPost({
     title,
     summary,
-    content,
-  });
-
-  const postSummary = await getSummary({
-    title,
-    summary: summary,
-    content,
-  });
-
-  const postContent = await getContent({
-    title,
-    summary: summary,
     content,
   });
 
