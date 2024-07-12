@@ -7,4 +7,5 @@ module.exports = {
   telegraphAccessToken: process.env.TELEGRAPH_ACCESS_TOKEN,
   author_name: process.env.AUTHOR_NAME,
   author_url: process.env.AUTHOR_URL,
+  send_chatids: process.env.SEND_CHATIDS.split(",").map(Number),
 };

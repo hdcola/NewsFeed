@@ -6,6 +6,11 @@ const sendMessage = async (chatId, message, imgUrl) => {
   await bot.sendPhoto(chatId, imgUrl, { caption: message });
 };
 
+const sendPhoto = async (chatId, imgUrl, { caption, parse_mode = "HTML" }) => {
+  const bot = new TelegramBot(config.telegramBotToken, { polling: false });
+  await bot.sendPhoto(chatId, imgUrl, { caption, parse_mode });
+};
+
 const startBot = (replyMsg) => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: true });
 
@@ -27,4 +32,4 @@ const startBot = (replyMsg) => {
   });
 };
 
-module.exports = { sendMessage, startBot };
+module.exports = { sendMessage, startBot, sendPhoto };
