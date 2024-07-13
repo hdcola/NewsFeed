@@ -12,8 +12,8 @@ const createPage = async (title, content) => {
     title,
     formattedContent,
     {
-      author_name: config.author_name,
-      author_url: config.author_url,
+      author_name: config.authorName,
+      author_url: config.authorUrl,
     }
   );
   return result.url;

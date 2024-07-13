@@ -68,7 +68,7 @@ const feedToTelegram = async () => {
 
     const pubDate = format(new Date(item.pubDate), "yyyy-MM-dd HH:mm:ss");
 
-    for (const chatId of config.send_chatids) {
+    for (const chatId of config.sendChatIds) {
       await sendPhoto(chatId, item.enclosure.url, {
         caption: `<a href="${telegraphUrl}">${postTitle}</a>\n${pubDate}\n\n${postSummary}\n\n👉<a href="${telegraphUrl}"><b>继续浏览后续</b></a>`,
       });
@@ -78,14 +78,14 @@ const feedToTelegram = async () => {
 
 const main = async () => {
   if (config.telegramBotToken) {
-    // startBot(replyMsg);
-    while (true) {
+    if (config.serverMode) {
+      startBot(replyMsg);
+    } else {
       console.log(
         format(Date.now(), "yyyy-MM-dd HH:mm:ss"),
         "Checking for new posts..."
       );
       await feedToTelegram();
-      await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
     }
   } else {
     console.log("Please provide a Telegram bot token.");
