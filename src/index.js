@@ -70,7 +70,7 @@ const feedToTelegram = async () => {
 
     for (const chatId of config.send_chatids) {
       await sendPhoto(chatId, item.enclosure.url, {
-        caption: `<a href="${telegraphUrl}">${postTitle}</a>\n${pubDate}\n\n${postSummary}`,
+        caption: `<a href="${telegraphUrl}">${postTitle}</a>\n${pubDate}\n\n${postSummary}\n\n👉<a href="${telegraphUrl}"><b>继续浏览后续</b></a>`,
       });
     }
   }
