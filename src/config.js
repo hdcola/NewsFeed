@@ -9,6 +9,7 @@ const envConfig = {
   telegraphAccessToken: process.env.TELEGRAPH_ACCESS_TOKEN,
   authorName: process.env.AUTHOR_NAME,
   authorUrl: process.env.AUTHOR_URL,
+  adminChatId: parseInt(process.env.ADMIN_CHATID, 0),
   sendChatIds: process.env.SEND_CHATIDS
     ? process.env.SEND_CHATIDS.split(",").map(Number)
     : [],
@@ -54,6 +55,11 @@ const argvConfig = yargs(hideBin(process.argv))
     describe: "Server mode",
     type: "boolean",
     default: false,
+  })
+  .option("adminChatId", {
+    alias: "i",
+    describe: "Admin chat ID",
+    type: "number",
   })
   .help().argv;
 

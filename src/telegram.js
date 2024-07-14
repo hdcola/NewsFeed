@@ -11,20 +11,22 @@ const sendPhoto = async (chatId, imgUrl, { caption, parse_mode = "HTML" }) => {
   await bot.sendPhoto(chatId, imgUrl, { caption, parse_mode });
 };
 
-const startBot = (replyMsg) => {
+const startBot = () => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: true });
 
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(
-      chatId,
-      `Welcome ${chatId} to the Chinese Post Bot. Send me a RSS feed URL and I will send you a Chinese post.`
-    );
-  });
-
-  bot.on("message", async (msg) => {
-    const chatId = msg.chat.id;
-    await replyMsg(bot, chatId);
+    if (config.adminChatId === chatId) {
+      bot.sendMessage(
+        chatId,
+        `Welcome ${chatId} to the Chinese Post Bot. Send me a RSS feed URL and I will send you a Chinese post.`,
+        {
+          reply_markup: {
+            keyboard: [["showfeed"]],
+          },
+        }
+      );
+    }
   });
 
   bot.on("polling_error", (error) => {
