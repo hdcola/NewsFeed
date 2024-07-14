@@ -8,7 +8,6 @@ const saveFeed = async (feed) => {
 
 const loadFeed = async (url, all = false) => {
   const currentFeed = await readRSSFeed(url);
-  console.log("currentFeed:", currentFeed.length);
 
   if (all) {
     return currentFeed;
