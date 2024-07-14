@@ -6,9 +6,13 @@ const saveFeed = async (feed) => {
   fs.writeFileSync("feed.json", JSON.stringify(feed, null, 2), "utf-8");
 };
 
-const loadFeed = async (url) => {
+const loadFeed = async (url, all = false) => {
   const currentFeed = await readRSSFeed(url);
   console.log("currentFeed:", currentFeed.length);
+
+  if (all) {
+    return currentFeed;
+  }
 
   if (!fs.existsSync("feed.json")) {
     await saveFeed(currentFeed);

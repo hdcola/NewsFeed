@@ -1,5 +1,6 @@
 const config = require("./config.js");
 const TelegramBot = require("node-telegram-bot-api");
+const { startAdminBot } = require("./adminBot.js");
 
 const sendMessage = async (chatId, message, imgUrl) => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: false });
@@ -11,23 +12,10 @@ const sendPhoto = async (chatId, imgUrl, { caption, parse_mode = "HTML" }) => {
   await bot.sendPhoto(chatId, imgUrl, { caption, parse_mode });
 };
 
-const startBot = () => {
+const startBot = async () => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: true });
 
-  bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    if (config.adminChatId === chatId) {
-      bot.sendMessage(
-        chatId,
-        `Welcome ${chatId} to the Chinese Post Bot. Send me a RSS feed URL and I will send you a Chinese post.`,
-        {
-          reply_markup: {
-            keyboard: [["showfeed"]],
-          },
-        }
-      );
-    }
-  });
+  await startAdminBot(bot);
 
   bot.on("polling_error", (error) => {
     console.log(error);

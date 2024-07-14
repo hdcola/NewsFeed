@@ -7,15 +7,18 @@ const config = require("./config.js");
 const { sendPhoto, startBot } = require("./telegram.js");
 const { format } = require("date-fns");
 const { createPage } = require("./telegraph.js");
+const { sendFeedItemToAdmin } = require("./adminBot.js");
 
 const feedToTelegram = async () => {
   const feed = await loadFeed(config.rssFeedUrl);
 
-  for (const item of feed) {
+  for (const [index, item] of feed.entries()) {
     const { title, summary, content } = await fetchContent(item.link);
     console.log("Sending a post...");
     console.log(item.link);
     console.log(item.enclosure.url);
+
+    await sendFeedItemToAdmin(index, item);
 
     const {
       title: postTitle,
@@ -44,7 +47,8 @@ const feedToTelegram = async () => {
 const main = async () => {
   if (config.telegramBotToken) {
     if (config.serverMode) {
-      startBot();
+      console.log("Starting the bot in server mode...");
+      await startBot();
     } else {
       console.log(
         format(Date.now(), "yyyy-MM-dd HH:mm:ss"),
