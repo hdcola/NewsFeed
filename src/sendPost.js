@@ -4,6 +4,7 @@ const { format } = require("date-fns");
 const { getPost } = require("./getChinesePost.js");
 const TelegramBot = require("node-telegram-bot-api");
 const config = require("./config.js");
+const crypto = require("crypto");
 
 const sendMessage = async (chatId, message, imgUrl) => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: false });
@@ -18,6 +19,25 @@ const sendPhoto = async (chatId, imgUrl, { caption, parse_mode = "HTML" }) => {
 const sentMessageToAdmin = async (message, form = {}) => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: false });
   await bot.sendMessage(config.adminChatId, message, { form });
+};
+
+const sendFeedItemToAdmin = async (index, item) => {
+  const bot = new TelegramBot(config.telegramBotToken, { polling: false });
+  const hash = crypto.createHash("md5").update(item.link).digest("hex");
+  bot.sendMessage(
+    config.adminChatId,
+    `${index} ${item.title}\n${item.enclosure.url} ${item.link}`,
+    {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "发送", callback_data: `send ${hash}` },
+            { text: "预览", callback_data: `preview ${hash}` },
+          ],
+        ],
+      },
+    }
+  );
 };
 
 const sendPostItem = async (item, chatIds, { sendAdmin = true, index = 1 }) => {
@@ -55,4 +75,4 @@ const sendPostItem = async (item, chatIds, { sendAdmin = true, index = 1 }) => {
   }
 };
 
-module.exports = { sendPostItem };
+module.exports = { sendPostItem, sendFeedItemToAdmin };

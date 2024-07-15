@@ -1,16 +1,7 @@
 const config = require("./config");
-const TelegramBot = require("node-telegram-bot-api");
 const { loadFeed } = require("./feedLoader");
 const crypto = require("crypto");
-const { sendPostItem } = require("./sendPost.js");
-
-function callbackWrapper(asyncFn) {
-  return function (...args) {
-    asyncFn(...args).catch((err) => {
-      console.error("Error in async function:", err);
-    });
-  };
-}
+const { sendPostItem, sendFeedItemToAdmin } = require("./sendPost.js");
 
 const showAllFeeds = async (bot, msg) => {
   console.log("showFeed");
@@ -21,21 +12,6 @@ const showAllFeeds = async (bot, msg) => {
       await sendFeedItemToAdmin(index, item);
     }
   }
-};
-
-const sendFeedItemToAdmin = async (index, item) => {
-  const bot = new TelegramBot(config.telegramBotToken, { polling: false });
-  const hash = crypto.createHash("md5").update(item.link).digest("hex");
-  bot.sendMessage(config.adminChatId, `${index} ${item.title}\n${item.link}`, {
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: "发送", callback_data: `send ${hash}` },
-          { text: "预览", callback_data: `preview ${hash}` },
-        ],
-      ],
-    },
-  });
 };
 
 const sendPreview = async (bot, hash) => {
@@ -51,6 +27,7 @@ const sendPreview = async (bot, hash) => {
   }
 };
 
+// /start
 const startAdminBot = async (bot) => {
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
@@ -68,10 +45,20 @@ const startAdminBot = async (bot) => {
     }
   });
 
-  bot.onText(
-    /showfeed/,
-    callbackWrapper((msg) => showAllFeeds(bot, msg))
-  );
+  // /showfeed
+  bot.onText(/showfeed/, async (msg) => showAllFeeds(bot, msg));
+
+  // /post imgurl posurl
+  bot.onText(/\/post (.+) (.+)/, async (msg, match) => {
+    const imgUrl = match[1];
+    const postUrl = match[2];
+    const item = {
+      link: postUrl,
+      pubDate: Date.now(),
+      enclosure: { url: imgUrl },
+    };
+    await sendPostItem(item, [config.adminChatId], { sendAdmin: false });
+  });
 
   bot.on("callback_query", async (query) => {
     const msg = query.message;
