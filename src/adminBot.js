@@ -2,15 +2,7 @@ const config = require("./config");
 const TelegramBot = require("node-telegram-bot-api");
 const { loadFeed } = require("./feedLoader");
 const crypto = require("crypto");
-const fetchContent = require("./fetchContent.js");
-const { getPost } = require("./getChinesePost.js");
-const { createPage } = require("./telegraph.js");
-const { format } = require("date-fns");
-
-const sentMessageToAdmin = async (message, form = {}) => {
-  const bot = new TelegramBot(config.telegramBotToken, { polling: false });
-  await bot.sendMessage(config.adminChatId, message, { form });
-};
+const { sendPostItem } = require("./sendPost.js");
 
 function callbackWrapper(asyncFn) {
   return function (...args) {
@@ -53,25 +45,7 @@ const sendPreview = async (bot, hash) => {
   });
 
   if (item) {
-    const { title, summary, content } = await fetchContent(item.link);
-    const {
-      title: postTitle,
-      summary: postSummary,
-      content: postContent,
-    } = await getPost({
-      title,
-      summary,
-      content,
-    });
-
-    const telegraphUrl = await createPage(postTitle, postContent);
-
-    const pubDate = format(new Date(item.pubDate), "yyyy-MM-dd HH:mm:ss");
-
-    bot.sendPhoto(config.adminChatId, item.enclosure.url, {
-      caption: `<a href="${telegraphUrl}">${postTitle}</a>\n${pubDate}\n\n${postSummary}\n\n👉<a href="${telegraphUrl}"><b>继续浏览后续</b></a>`,
-      parse_mode: "HTML",
-    });
+    await sendPostItem(item, [config.adminChatId], { sendAdmin: false });
   } else {
     bot.sendMessage(config.adminChatId, "Item not found");
   }
@@ -108,4 +82,4 @@ const startAdminBot = async (bot) => {
   });
 };
 
-module.exports = { sentMessageToAdmin, startAdminBot, sendFeedItemToAdmin };
+module.exports = { startAdminBot };
