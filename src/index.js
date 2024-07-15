@@ -10,7 +10,7 @@ const feedToTelegram = async () => {
   const feed = await loadFeed(config.rssFeedUrl);
 
   for (const [index, item] of feed.entries()) {
-    await sendPostItem(item, config.sendChatIds, { sendAdmin: false, index });
+    await sendPostItem(item, config.sendChatIds, { index });
   }
 };
 
