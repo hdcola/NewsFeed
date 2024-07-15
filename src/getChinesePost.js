@@ -46,7 +46,7 @@ const getSummary = async ({ title, summary, content }) => {
 const getContent = async ({ title, summary, content }) => {
   try {
     return aiGenerate(
-      "请使用以下新闻帮我生成一篇中文新闻内容，只需要正文，纯文本格式:",
+      "请使用以下新闻帮我翻译生成一篇中文新闻内容，只需要正文，纯文本格式:",
       title,
       summary,
       content
