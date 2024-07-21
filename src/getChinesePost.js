@@ -1,13 +1,15 @@
 const ollama = require("ollama").default;
 const config = require("./config.js");
-const { domToNode } = require("./telegraph.js");
 
 const getPost = async ({ title, summary, content }) => {
   try {
-    const postTitle = await getTitle({ title, summary, content });
-    const postSummary = await getSummary({ title, summary, content });
-    const postHtmlContent = await getContent({ title, summary, content });
-    const postContent = domToNode(postHtmlContent).children;
+    const postTitle = await getTitle({ title, summary: "", content: "" });
+    const postSummary = await getSummary({ title: "", summary, content: "" });
+    const postContent = await getContent({
+      title: "",
+      summary: "",
+      content,
+    });
 
     return {
       title: postTitle,
@@ -22,7 +24,7 @@ const getPost = async ({ title, summary, content }) => {
 const getTitle = async ({ title, summary, content }) => {
   try {
     return aiGenerate([
-      "请使用以下新闻帮我生成一个中文的新闻标题,在10字左右,不要带有任何格式，不要让我选择:",
+      "请使用以下新闻帮我生成一个中文的新闻标题,不要带有任何格式，不要让我选择:",
       "",
       title,
       summary,
@@ -36,7 +38,7 @@ const getTitle = async ({ title, summary, content }) => {
 const getSummary = async ({ title, summary, content }) => {
   try {
     return aiGenerate([
-      "请使用以下新闻帮我生成一段纯文本格式的中文新闻简介,在50字上下:",
+      "请使用以下新闻帮我生成一段纯文本格式的中文新闻简介:",
       "",
       title,
       summary,
@@ -50,10 +52,12 @@ const getSummary = async ({ title, summary, content }) => {
 const getContent = async ({ title, summary, content }) => {
   try {
     return aiGenerate([
+      title,
+      summary,
       content,
       "",
       "",
-      "请使用以上内容帮我翻译为一篇HTML格式的中文新闻,请保留新闻中的图片和图片描述:",
+      "请将以上内容帮我翻译为一篇中文新闻,请保留新闻中的图片和图片描述:",
     ]);
   } catch (err) {
     throw new Error(err.message);

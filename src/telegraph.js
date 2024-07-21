@@ -1,11 +1,10 @@
 const api = require("telegraph-node");
 const ph = new api();
 const config = require("./config.js");
+const cheerio = require("cheerio");
 
 const createPage = async (title, content) => {
-  const formattedContent = Array.isArray(content)
-    ? content
-    : [{ tag: "p", children: [content] }];
+  const formattedContent = htmlToNode(content);
 
   const result = await ph.createPage(
     config.telegraphAccessToken,
