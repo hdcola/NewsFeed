@@ -24,7 +24,7 @@ const getPost = async ({ title, summary, content }) => {
 const getTitle = async ({ title, summary, content }) => {
   try {
     return aiGenerate([
-      "请使用以下新闻帮我生成一个中文的新闻标题,不要带有任何格式，不要让我选择:",
+      "请帮我将下面的新闻标题翻译为中文,不要带有任何格式，不要让我选择:",
       "",
       title,
       summary,
