@@ -1,4 +1,4 @@
-const fetchContent = require("./fetchContent.js");
+const { fetchContent } = require("./fetchContent.js");
 const { createPage } = require("./telegraph.js");
 const { format } = require("date-fns");
 const { getPost } = require("./getChinesePost.js");

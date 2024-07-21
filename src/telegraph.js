@@ -19,4 +19,61 @@ const createPage = async (title, content) => {
   return result.url;
 };
 
-module.exports = { createPage };
+const htmlToNode = (html) => {
+  const $ = cheerio.load(html, { decodeEntities: false });
+  const content = [];
+
+  function convertElement(element) {
+    const tag = element.tagName;
+    let children = $(element)
+      .contents()
+      .map((_, el) => convertElement(el))
+      .get()
+      .filter((child) => child !== ""); // 过滤掉空字符串
+
+    const text = $(element).text().trim();
+
+    if (!tag) {
+      return text || "";
+    }
+
+    switch (tag) {
+      case "p":
+      case "h3":
+      case "figcaption":
+      case "figure":
+      case "b":
+      case "i":
+      case "u":
+      case "s":
+      case "blockquote":
+        return {
+          tag,
+          children: children.length ? children : text ? [text] : [],
+        };
+      case "img":
+        return { tag: "img", attrs: { src: $(element).attr("src") } };
+      case "a":
+        return {
+          tag: "a",
+          attrs: { href: $(element).attr("href") },
+          children: children.length ? children : text ? [text] : [],
+        };
+      default:
+        return text || "";
+    }
+  }
+
+  $("body")
+    .contents()
+    .each((_, element) => {
+      const convertedElement = convertElement(element);
+      if (convertedElement && convertedElement !== "") {
+        content.push(convertedElement);
+      }
+    });
+
+  return content.filter((item) => item !== ""); // 最后再次过滤掉任何空字符串
+};
+
+module.exports = { createPage, htmlToNode };

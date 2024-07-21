@@ -1,33 +1,25 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-module.exports = async function fetchContent(url) {
-  try {
-    const response = await axios.get(url);
-    const content = response.data;
+const fetchContent = async (url) => {
+  const response = await axios.get(url);
+  const $ = cheerio.load(response.data);
+  const title = $("h1.headlines.titleModule .title.titleModule__main").text();
+  const summary = $(
+    "div.articleBody .lead.textModule.textModule--type-lead"
+  ).text();
+  const preContent = $(
+    "p.paragraph.textModule.textModule--type-paragraph,figure[itemscope][itemprop='associatedMedia']"
+  ).clone();
 
-    const $ = cheerio.load(content);
-
-    const titleText = $("h1.headlines.titleModule .title.titleModule__main")
-      .text()
-      .trim();
-    const summaries = $(
-      "div.articleBody .lead.textModule.textModule--type-lead"
-    )
-      .text()
-      .trim();
-
-    const paragraphs = $(
-      "div.articleBody p.paragraph.textModule.textModule--type-paragraph"
-    )
-      .map((_, element) => $(element).text().trim())
-      .get();
-    return {
-      title: titleText,
-      summary: summaries,
-      content: paragraphs.join("\n"),
-    };
-  } catch (error) {
-    console.error(error);
-  }
+  preContent.find("source").remove();
+  // move <img> to <figure> and remove <picture>
+  preContent.find("picture").each(function () {
+    const img = $(this).find("img");
+    $(this).replaceWith(img);
+  });
+  const content = $.html(preContent);
+  return { title, summary, content };
 };
+
+module.exports = { fetchContent };
