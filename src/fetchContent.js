@@ -18,7 +18,13 @@ const fetchContent = async (url) => {
     const img = $(this).find("img");
     $(this).replaceWith(img);
   });
-  const content = $.html(preContent);
+  // remove clas and style attributes
+  // preContent.find("p,img,figcaption").each(function () {
+  //   $(this).removeAttr("class").removeAttr("style").removeAttr("itemprop");
+  // });
+
+  let content = $.html(preContent);
+  // content = content.replace(/\s+/g, " ").trim();
   return { title, summary, content };
 };
 
