@@ -6,8 +6,8 @@ const getPost = async ({ title, summary, content }) => {
     const postTitle = await getTitle({ title, summary: "", content: "" });
     const postSummary = await getSummary({ title: "", summary, content: "" });
     const postContent = await getContent({
-      title: "",
-      summary: "",
+      title,
+      summary,
       content,
     });
 
@@ -58,8 +58,6 @@ const getContent = async ({ title, summary, content }) => {
   }
   try {
     return aiGenerate([
-      title,
-      summary,
       content,
       "",
       "",

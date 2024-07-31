@@ -6,14 +6,14 @@ const TelegramBot = require("node-telegram-bot-api");
 const config = require("./config.js");
 const crypto = require("crypto");
 
-const sendMessage = async (chatId, message, imgUrl) => {
-  const bot = new TelegramBot(config.telegramBotToken, { polling: false });
-  await bot.sendPhoto(chatId, imgUrl, { caption: message });
-};
-
 const sendPhoto = async (chatId, imgUrl, { caption, parse_mode = "HTML" }) => {
   const bot = new TelegramBot(config.telegramBotToken, { polling: false });
   await bot.sendPhoto(chatId, imgUrl, { caption, parse_mode });
+};
+
+const sendMessage = async (chatId, message, { parse_mode = "HTML" }) => {
+  const bot = new TelegramBot(config.telegramBotToken, { polling: false });
+  await bot.sendMessage(chatId, message, { parse_mode });
 };
 
 const sentMessageToAdmin = async (message, form = {}) => {
@@ -69,9 +69,11 @@ const sendPostItem = async (item, chatIds, { sendAdmin = true, index = 1 }) => {
   const pubDate = format(new Date(item.pubDate), "yyyy-MM-dd HH:mm:ss");
 
   for (const chatId of chatIds) {
-    await sendPhoto(chatId, item.enclosure.url, {
-      caption: `<a href="${telegraphUrl}">${postTitle}</a> | <a href="${item.link}">来源</a>\n${pubDate}\n\n${postSummary}\n\n👉<a href="${telegraphUrl}"><b>继续浏览后续</b></a>`,
-    });
+    await sendMessage(
+      chatId,
+      `<a href="${telegraphUrl}">${postTitle}</a> | <a href="${item.link}">来源</a>\n${pubDate}`,
+      { parse_mode: "HTML" }
+    );
   }
 };
 
