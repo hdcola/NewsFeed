@@ -9,7 +9,7 @@ const { createPage } = require("./telegraph");
 
 const main = async () => {
   const url =
-    "https://www.lapresse.ca/actualites/environnement/une-angoisse-nucleaire-coule-jusqu-a-montreal/2024-07-21/on-met-la-securite-du-public-dans-les-mains-du-prive.php";
+    "https://www.lapresse.ca/actualites/caricatures/2024-07-31/fitzgibbon-pret-pour-ses-jeux.php";
   const { title, summary, content } = await fetchContent(url);
   console.log(content);
 

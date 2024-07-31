@@ -36,6 +36,9 @@ const getTitle = async ({ title, summary, content }) => {
 };
 
 const getSummary = async ({ title, summary, content }) => {
+  if (summary.length === 0) {
+    return "";
+  }
   try {
     return aiGenerate([
       "请使用以下新闻帮我生成一段纯文本格式的中文新闻简介:",
@@ -50,6 +53,9 @@ const getSummary = async ({ title, summary, content }) => {
 };
 
 const getContent = async ({ title, summary, content }) => {
+  if (summary.length === 0) {
+    return content;
+  }
   try {
     return aiGenerate([
       title,
